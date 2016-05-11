@@ -16,6 +16,7 @@ using namespace caffe;  // NOLINT(build/namespaces)
 using std::string;
 
 #define BATCH_TEST
+#define CHECK_IMAGE
 
 /* Pair (label, confidence) representing a prediction. */
 typedef std::pair<string, float> Prediction;
@@ -270,8 +271,18 @@ int main(int argc, char** argv) {
       tn++;
     } else if (p.first[0] == '1' && gt_label[0] == '0') {
       fp++;
+#ifdef CHECK_IMAGE
+      std::string img_name = file_name.substr(file_name.find("2016"));
+      string file_name_save = "data/tray/fp/" + img_name;
+      cv::imwrite(file_name_save, img);
+#endif
     } else if (p.first[0] == '0' && gt_label[0] == '1') {
       fn++;
+#ifdef CHECK_IMAGE
+      std::string img_name = file_name.substr(file_name.find("2016"));
+      string file_name_save = "data/tray/fn/" + img_name;
+      cv::imwrite(file_name_save, img);
+#endif
     } else {
       std::cout << "error label: " << p.first << ", " 
                 << gt_label << std::endl;
